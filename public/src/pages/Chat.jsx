@@ -15,7 +15,7 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
   
-  
+  // getting current user data from local storage
   useEffect(() => {
 
     const helper = async () => {
@@ -29,14 +29,17 @@ export default function Chat() {
 
   }, []);
 
-
+  //setting up socket connection
   useEffect(() => {
     if (currentUser) {
-      socket.current = io(host);
+      socket.current = io(host,{
+        reconnection: true,
+      });
       socket.current.emit("add-user", currentUser._id);
     }
   }, [currentUser]);
 
+  //getting contacts
   useEffect(() => {
 
     const helper = async () => {
@@ -53,6 +56,8 @@ export default function Chat() {
     helper();
    
   }, [currentUser]);
+
+  
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
